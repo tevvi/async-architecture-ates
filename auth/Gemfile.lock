@@ -99,6 +99,8 @@ GEM
       responders
       warden (~> 1.2.3)
     diff-lcs (1.5.0)
+    doorkeeper (5.6.6)
+      railties (>= 5)
     erubi (1.12.0)
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
@@ -298,6 +300,7 @@ DEPENDENCIES
   capybara
   debug
   devise
+  doorkeeper
   factory_bot_rails
   faker
   importmap-rails
