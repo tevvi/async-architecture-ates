@@ -4,5 +4,48 @@ class Account < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  enum :role, [ :worker, :bookkeeper, :manager, :admin ], prefix: true, default: :worker
+  has_many :access_grants,
+           class_name: 'Doorkeeper::AccessGrant',
+           foreign_key: :resource_owner_id,
+           dependent: :delete_all # or :destroy if you need callbacks
+
+  has_many :access_tokens,
+           class_name: 'Doorkeeper::AccessToken',
+           foreign_key: :resource_owner_id,
+           dependent: :delete_all # or :destroy if you need callbacks
+
+  enum :role, ['worker', 'bookkeeper', 'manager', 'admin'].index_by(&:itself), prefix: true, default: :worker
+
+  after_create do
+    record = self
+
+    event = {
+      event_name: 'AccountCreated', # Не увидел никакого смысла изменять названия. С одинаковыми названиями нам будет проще общаться
+      data: record.slice(:public_id, :role, :email)
+    }
+
+    Karafka.producer.produce_sync(topic: 'accounts-cud', payload: event.to_json)
+  end
+
+  after_update do
+    record = self
+
+    event = {
+      event_name: 'AccountUpdated',
+      data: record.slice(:public_id, :role, :email)
+    }
+
+    Karafka.producer.produce_sync(topic: 'accounts-cud', payload: event.to_json)
+  end
+
+  after_destroy do
+    record = self
+
+    event = {
+      event_name: 'AccountDeleted',
+      data: record.slice(:public_id)
+    }
+
+    Karafka.producer.produce_sync(topic: 'accounts-cud', payload: event.to_json)
+  end
 end
