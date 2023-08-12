@@ -16,10 +16,10 @@ services:
       - db_data:/var/lib/postgresql/data
     networks:
       - kafka-app
-  app:
+  auth:
     build:
-      context: ./base-service
-    command: bash -c "cd base-service && bundle exec rails s -p 3000 -b '0.0.0.0'"
+      context: ./auth
+    command: bash -c "cd auth && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
       - ".:/app"
     ports:
@@ -31,7 +31,7 @@ services:
       - db
       - kafka
     env_file:
-      - "base-service/env.dev"
+      - "auth/env.dev"
     networks:
       - kafka-app
   karafka-server:
