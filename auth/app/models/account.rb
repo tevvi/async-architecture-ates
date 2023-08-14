@@ -14,7 +14,7 @@ class Account < ApplicationRecord
            foreign_key: :resource_owner_id,
            dependent: :delete_all # or :destroy if you need callbacks
 
-  enum :role, ['worker', 'bookkeeper', 'manager', 'admin'].index_by(&:itself), prefix: true, default: :worker
+  enum :role, ['worker', 'bookkeeper', 'manager', 'admin'].index_by(&:itself), prefix: true, default: 'worker'
 
   after_create do
     record = self
@@ -36,6 +36,15 @@ class Account < ApplicationRecord
     }
 
     Karafka.producer.produce_sync(topic: 'accounts-cud', payload: event.to_json)
+
+    if role_changed?
+      event = {
+        event_name: 'AccountRoleChanged',
+        data: { **record.slice(:public_id, :role), old_role: role_was }
+      }
+
+      Karafka.producer.produce_sync(topic: 'accounts-be', payload: event.to_json)
+    end
   end
 
   after_destroy do

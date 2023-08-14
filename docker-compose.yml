@@ -13,7 +13,7 @@ services:
     expose:
       - 5432
     volumes:
-      - auth_db_data:/var/lib/postgresql/auth/data
+      - auth_db_data:/var/lib/postgresql/data
     networks:
       - kafka-app
   auth:
@@ -48,7 +48,7 @@ services:
     expose:
       - 5432
     volumes:
-      - tasks_db_data:/var/lib/postgresql/tasks/data
+      - tasks_db_data:/var/lib/postgresql/data
     networks:
       - kafka-app
   tasks:
