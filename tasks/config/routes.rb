@@ -6,4 +6,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
   mount Karafka::Web::App, at: '/karafka'
+
+  get 'auth/:provider/callback', to: 'sessions#create'
+  get '/login', to: 'sessions#new'
 end

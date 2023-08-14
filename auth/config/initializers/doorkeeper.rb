@@ -23,11 +23,11 @@ Doorkeeper.configure do
     # Put your admin authentication logic here.
     # Example implementation:
 
-    if current_account
-      head :forbidden unless current_account.role_admin?
-    else
-      redirect_to sign_in_url
-    end
+    # if current_account
+    #   head :forbidden unless current_account.role_admin?
+    # else
+    #   redirect_to account_session_url
+    # end
   end
 
   # You can use your own model classes if you need to extend (or even override) default
@@ -231,8 +231,8 @@ Doorkeeper.configure do
   # For more information go to
   # https://doorkeeper.gitbook.io/guides/ruby-on-rails/scopes
   #
-  # default_scopes  :public
-  # optional_scopes :write, :update
+  default_scopes  :public
+  optional_scopes :write, :update
 
   # Allows to restrict only certain scopes for grant_type.
   # By default, all the scopes will be available for all the grant types.

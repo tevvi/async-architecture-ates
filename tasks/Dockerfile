@@ -30,7 +30,7 @@ RUN gem install bundler -v 2.4.17
 
 RUN mkdir /app
 
-WORKDIR /app
+WORKDIR /app/tasks
 
 ADD Gemfile /app/Gemfile
 ADD Gemfile.lock /app/Gemfile.lock

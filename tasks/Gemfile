@@ -10,6 +10,25 @@ gem "bootsnap", require: false
 gem 'karafka', "~> 2.1.6"
 gem 'karafka-web'
 
+gem 'omniauth'
+gem 'omniauth-oauth2'
+gem "omniauth-rails_csrf_protection"
+
+# The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
+gem "sprockets-rails"
+
+# Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
+gem "importmap-rails"
+
+# Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
+gem "stimulus-rails"
+
+# Build JSON APIs with ease [https://github.com/rails/jbuilder]
+gem "jbuilder"
+
+# Reduces boot times through caching; required in config/boot.rb
+gem "bootsnap", require: false
+
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
@@ -24,6 +43,10 @@ group :development, :test do
 end
 
 group :test do
+  gem "capybara"
+  gem "selenium-webdriver"
+  gem "webdrivers"
+
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'rspec'

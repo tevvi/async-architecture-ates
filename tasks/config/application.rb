@@ -1,4 +1,5 @@
 require_relative "boot"
+require_relative "../oauth_strategy"
 
 require "rails/all"
 
@@ -22,10 +23,13 @@ module App
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
-    config.api_only = true
 
     config.session_store :cookie_store, key: '_interslice_session'
-    config.middleware.use ActionDispatch::Cookies
-    config.middleware.use config.session_store, config.session_options
+    config.middleware.use ActionDispatch::Cookies # Required for all session management
+    config.middleware.use ActionDispatch::Session::CookieStore, config.session_options
+
+    config.middleware.use OmniAuth::Builder do
+      provider :keepa, ENV['AUTH_KEY'], ENV['AUTH_SECRET'], scope: 'public write'
+    end
   end
 end
