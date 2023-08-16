@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   # root "articles#index"
   mount Karafka::Web::App, at: '/karafka'
 
+  get 'login', to: 'sessions#new'
   get 'auth/:provider/callback', to: 'sessions#create'
 
   get '/dashboard', to: 'tasks#index'

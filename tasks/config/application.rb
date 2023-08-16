@@ -1,5 +1,5 @@
 require_relative "boot"
-require_relative "../oauth_strategy"
+require_relative '../lib/oauth_strategy'
 
 require "rails/all"
 
@@ -7,7 +7,7 @@ require "rails/all"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module App
+module Tasks
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0

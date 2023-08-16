@@ -6,8 +6,8 @@ module OmniAuth
       option :name, :keepa
 
       option :client_options, {
-        :site => "http://0.0.0.0:3000/oauth/authorize",
-        :authorize_url => "http://0.0.0.0:3000/oauth/authorize"
+        :site => "http://auth:3000",
+        :authorize_url => "http://localhost:3000/oauth/authorize"
       }
 
       uid { raw_info["public_id"] }
