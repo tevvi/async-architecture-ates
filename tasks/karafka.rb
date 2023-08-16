@@ -27,13 +27,15 @@ class KarafkaApp < Karafka::App
     # Uncomment this if you use Karafka with ActiveJob
     # You need to define the topic per each queue name you use
     # active_job_topic :default
-    topic :example do
-      # Uncomment this if you want Karafka to manage your topics configuration
-      # Managing topics configuration via routing will allow you to ensure config consistency
-      # across multiple environments
-      #
+
+    topic :'accounts-cud' do
       config(partitions: 2, 'cleanup.policy': 'compact')
-      consumer ExampleConsumer
+      consumer AccountsConsumer
+    end
+
+    topic :'accounts-be' do
+      config(partitions: 2, 'cleanup.policy': 'compact')
+      consumer AccountsConsumer
     end
   end
 end
