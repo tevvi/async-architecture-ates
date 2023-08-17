@@ -1,0 +1,1 @@
+30 21 * * * bundle exec rake pay_salary

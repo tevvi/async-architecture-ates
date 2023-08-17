@@ -20,7 +20,7 @@ class TasksController < ApplicationController
       event_time: Time.now.to_s,
       producer: 'tasks_service',
       event_name: 'TaskCreated',
-      data: task.slice(:public_id, :account_public_id, :description, :status, :fee, :price, :account_public_id)
+      data: task.slice(:public_id, :account_public_id, :description, :status, :fee, :price)
     }
 
     result = SchemaRegistry.validate_event(event, 'tasks.created', version: 2)
