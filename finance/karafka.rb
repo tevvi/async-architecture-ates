@@ -37,6 +37,21 @@ class KarafkaApp < Karafka::App
       config(partitions: 2, 'cleanup.policy': 'compact')
       consumer AccountsConsumer
     end
+
+    topic :'tasks-lifecycle' do
+      config(partitions: 2, 'cleanup.policy': 'compact')
+      consumer TasksConsumer
+    end
+
+    topic :'tasks-stream' do
+      config(partitions: 2, 'cleanup.policy': 'compact')
+      consumer TasksConsumer
+    end
+
+    topic :'balance-lifecycle' do
+      config(partitions: 2, 'cleanup.policy': 'compact')
+      consumer BalanceConsumer
+    end
   end
 end
 
