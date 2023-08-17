@@ -4,13 +4,27 @@ class TasksController < ApplicationController
   end
 
   def create
+    task_tracker_id, description = params[:description].split(']')
     task = Task.create!(
-      description: params[:description],
+      description: description,
       status: :in_progress,
       account_public_id: current_account.public_id,
+      task_tracker_id: task_tracker_id,
       fee: rand(-20..-10),
       price: rand(20..40)
     )
+
+    event = {
+      event_id: SecureRandom.uuid,
+      event_version: 2,
+      event_time: Time.now.to_s,
+      producer: 'tasks_service',
+      event_name: 'TaskCreated',
+      data: task.slice(:public_id, :account_public_id, :description, :status, :fee, :price, :account_public_id)
+    }
+
+    result = SchemaRegistry.validate_event(event, 'tasks.created', version: 2)
+    Karafka.producer.produce_sync(topic: 'tasks-stream', payload: event.to_json) if result.success?
 
     event = {
       event_name: 'TaskAssigned',
@@ -22,7 +36,7 @@ class TasksController < ApplicationController
       }
     }
 
-    Karafka.producer.produce_sync(topic: 'tasks-be', payload: event.to_json)
+    Karafka.producer.produce_sync(topic: 'tasks-lifecycle', payload: event.to_json)
   end
 
   def complete
@@ -38,7 +52,7 @@ class TasksController < ApplicationController
       }
     }
 
-    Karafka.producer.produce_sync(topic: 'tasks-be', payload: event.to_json)
+    Karafka.producer.produce_sync(topic: 'tasks-lifecycle', payload: event.to_json)
   end
 
   def reassign
@@ -63,7 +77,7 @@ class TasksController < ApplicationController
         data: slice
       }
 
-      Karafka.producer.produce_sync(topic: 'tasks-be', payload: event.to_json)
+      Karafka.producer.produce_sync(topic: 'tasks-lifecycle', payload: event.to_json)
     end
   end
 end

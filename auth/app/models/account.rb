@@ -24,7 +24,7 @@ class Account < ApplicationRecord
       data: record.slice(:public_id, :role, :email)
     }
 
-    Karafka.producer.produce_sync(topic: 'accounts-cud', payload: event.to_json)
+    Karafka.producer.produce_sync(topic: 'accounts-stream', payload: event.to_json)
   end
 
   after_update do
@@ -35,7 +35,7 @@ class Account < ApplicationRecord
       data: record.slice(:public_id, :role, :email)
     }
 
-    Karafka.producer.produce_sync(topic: 'accounts-cud', payload: event.to_json)
+    Karafka.producer.produce_sync(topic: 'accounts-stream', payload: event.to_json)
 
     if role_changed?
       event = {
@@ -55,6 +55,6 @@ class Account < ApplicationRecord
       data: record.slice(:public_id)
     }
 
-    Karafka.producer.produce_sync(topic: 'accounts-cud', payload: event.to_json)
+    Karafka.producer.produce_sync(topic: 'accounts-stream', payload: event.to_json)
   end
 end
